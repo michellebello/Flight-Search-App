@@ -20,7 +20,7 @@ val blue = Color(0XFF637ec7)
 val ivory = Color(0XFFf6f7f0)
 
 @Composable
-fun FlightScreen() {
+fun Screen() {
     Scaffold(
         topBar = {
             TopAppBar(
