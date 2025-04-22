@@ -16,8 +16,8 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.dp
 
-val blueColor = Color(0XFF637ec7)
-val ivoryColor = Color(0XFFf6f7f0)
+val blue = Color(0XFF637ec7)
+val ivory = Color(0XFFf6f7f0)
 
 @Composable
 fun FlightScreen() {
@@ -25,8 +25,8 @@ fun FlightScreen() {
         topBar = {
             TopAppBar(
                 colors = TopAppBarDefaults.topAppBarColors(
-                    containerColor = blueColor,
-                    titleContentColor = ivoryColor
+                    containerColor = blue,
+                    titleContentColor = ivory
                 ),
                 title = {
                     Text("Flight Search")
