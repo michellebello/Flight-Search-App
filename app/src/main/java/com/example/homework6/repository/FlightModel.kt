@@ -6,6 +6,7 @@ import androidx.lifecycle.ViewModelProvider.AndroidViewModelFactory.Companion.AP
 import androidx.lifecycle.viewmodel.initializer
 import androidx.lifecycle.viewmodel.viewModelFactory
 import com.example.homework6.FlightApplication
+import com.example.homework6.store.Airport
 import com.example.homework6.store.Favorite
 import com.example.homework6.store.FlightDao
 import kotlinx.coroutines.flow.Flow
@@ -15,6 +16,11 @@ class FlightModel(private val flightDao: FlightDao) : ViewModel() {
 
     suspend fun addFavorite(favorite: Favorite) {
         flightDao.insert(favorite)
+    }
+
+    // add method to searchBy user input in screens.kt
+    fun searchFlightsByAirport(query: String): Flow<List<Airport>> {
+        return flightDao.searchFlights("%${query}")
     }
 
     companion object {

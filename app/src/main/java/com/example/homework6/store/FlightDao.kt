@@ -16,4 +16,8 @@ interface FlightDao {
 
     @Query ("SELECT * FROM favorite ORDER BY id ASC")
     fun getAllFavoriteFlights() : Flow<List<Favorite>>
+
+    // add query to search by userInput
+    @Query("SELECT * FROM airport WHERE iata_code LIKE :query OR name LIKE :query")
+    fun searchFlights(query:String) : Flow<List<Airport>>
 }
