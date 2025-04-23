@@ -7,7 +7,7 @@ import androidx.room.Query
 import kotlinx.coroutines.flow.Flow
 
 @Dao
-interface Dao {
+interface FlightDao {
     @Insert(onConflict = OnConflictStrategy.IGNORE)
     suspend fun insert(flight: Favorite)
 
