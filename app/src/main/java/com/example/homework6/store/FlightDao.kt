@@ -11,9 +11,9 @@ interface FlightDao {
     @Insert(onConflict = OnConflictStrategy.IGNORE)
     suspend fun insert(flight: Favorite)
 
-    @Query("SELECT * from favorite WHERE id = :id")
+    @Query("SELECT * FROM favorite WHERE id = :id")
     fun getFlightId ( id: Int ): Flow<Favorite>
 
-    @Query ("SELECT * from favorite ORDER BY id ASC")
+    @Query ("SELECT * FROM favorite ORDER BY id ASC")
     fun getAllFavoriteFlights() : Flow<List<Favorite>>
 }

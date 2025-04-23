@@ -18,8 +18,8 @@ data class Airport (
 
 @Entity(tableName = "favorite")
 data class Favorite (
-    @PrimaryKey
-    val id: Int,
+    @PrimaryKey (autoGenerate = true)
+    val id: Int = 0,
     @ColumnInfo (name="departure_code")
     val departureCode: String,
     @ColumnInfo (name="destination_code")
