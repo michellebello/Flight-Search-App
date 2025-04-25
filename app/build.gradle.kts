@@ -39,7 +39,6 @@ android {
         compose = true
     }
 }
-
 dependencies {
     ksp(libs.androidx.room.compiler.v250)
     implementation(libs.androidx.core.ktx)
@@ -53,6 +52,10 @@ dependencies {
     implementation(libs.androidx.lifecycle.viewmodel.compose)
     implementation(libs.androidx.lifecycle.livedata.ktx)
     implementation(libs.androidx.runtime.livedata)
+
+    // Compose Icons
+    implementation(libs.androidx.material.icons.extended)
+
     testImplementation(libs.junit)
     androidTestImplementation(libs.androidx.junit)
     androidTestImplementation(libs.androidx.espresso.core)
@@ -61,9 +64,8 @@ dependencies {
     debugImplementation(libs.androidx.ui.tooling)
     debugImplementation(libs.androidx.ui.test.manifest)
 
-    val roomVersion = "2.6.1" // or latest
-
+    // Room
     implementation(libs.androidx.room.runtime)
-    // Optional - Kotlin Extensions and Coroutines support for Room
     implementation(libs.androidx.room.ktx)
 }
+

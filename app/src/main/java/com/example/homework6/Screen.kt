@@ -6,9 +6,12 @@ import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.material3.Button
@@ -32,6 +35,13 @@ import androidx.lifecycle.viewmodel.compose.viewModel
 import com.example.homework6.repository.FlightModel
 import com.example.homework6.store.Airport
 import kotlinx.coroutines.flow.flowOf
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.Star
+import androidx.compose.material3.Card
+import androidx.compose.material3.CardDefaults
+import androidx.compose.material3.Icon
+import androidx.compose.material3.IconButton
+import androidx.compose.ui.text.style.TextAlign
 
 val blue = Color(0XFF637ec7)
 val ivory = Color(0XFFf6f7f0)
@@ -79,51 +89,109 @@ fun Screen(viewModel: FlightModel = viewModel(factory = FlightModel.factory)) {
                 modifier = Modifier.fillMaxWidth()
             )
 
-            if (selectedAirport == null) {
-                LazyColumn(
-                    contentPadding = innerPadding,
-                    modifier = Modifier.fillMaxSize()
-                ) {
-                    items(flights) { airport->
-                        Text(
-                            text = "${airport.airportCode} ➡ ${airport.airportName}",
-                            modifier = Modifier
-                                .fillMaxWidth()
-                                .padding(5.dp)
-                                .clickable {
-                                    selectedAirport = airport
-                                    userInput = airport.airportCode
-                                }
-                        )
-                    }
-                }
-            } else {
-                LazyColumn(
-                    contentPadding = innerPadding,
-                    modifier = Modifier.fillMaxSize()
-                ) {
-                    items(flightsFromSelectedAirport) { flight ->
-                        Row(
-                            verticalAlignment = Alignment.CenterVertically,
-                            modifier = Modifier
-                                .fillMaxWidth()
-                                .padding(10.dp)
-                        ) {
-                            Text(
-                                text = "${selectedAirport!!.airportCode} ➡ ${flight.airportCode} (${flight.airportName})",
-                                modifier = Modifier.weight(1f)
+            Spacer(modifier = Modifier.height(16.dp))
+
+            when {
+                userInput.isBlank() -> {
+                    LazyColumn {
+                        items(favorites) { favorite ->
+                            FlightInfoCard(
+                                originCode = favorite.departureCode,
+                                originName = "hello",
+                                destinationCode = favorite.destinationCode,
+                                destinationName = "hello",
+                                onAddFavorite = {}
                             )
-                            Button(onClick = {
-                                viewModel.addFavoriteFlight(selectedAirport!!.airportCode, flight.airportCode)
-                            }) {
-                                Text("Save")
-                            }
                         }
                     }
                 }
+                selectedAirport == null -> {
+                    LazyColumn(
+                        contentPadding = innerPadding,
+                        modifier = Modifier.fillMaxSize()
+                    ) {
+                        items(flights) { airport ->
+                            Text(
+                                text = "${airport.airportCode} ➡ ${airport.airportName}",
+                                modifier = Modifier
+                                    .fillMaxWidth()
+                                    .padding(5.dp)
+                                    .clickable {
+                                        selectedAirport = airport
+                                        userInput = airport.airportCode
+                                    }
+                            )
+                        }
+                    }
+                }
+                else  -> {
+                        LazyColumn(
+                            contentPadding = innerPadding,
+                            modifier = Modifier.fillMaxSize()
+                        ) {
+                            items(flightsFromSelectedAirport) { flight ->
+                               FlightInfoCard(
+                                   originCode = selectedAirport!!.airportCode,
+                                   originName = selectedAirport!!.airportName,
+                                   destinationCode = flight.airportCode,
+                                   destinationName = flight.airportName,
+                                   onAddFavorite = {
+                                       viewModel.addFavoriteFlight(
+                                           selectedAirport!!.airportCode,
+                                           flight.airportCode
+                                       )
+                                   }
+                               )
+                            }
+                        }
+                    }
             }
 
         }
 
+    }
+}
+
+@Composable
+fun FlightInfoCard(originCode: String, originName: String, destinationCode: String, destinationName: String, onAddFavorite: () -> Unit) {
+    Card(
+        colors = CardDefaults.cardColors(
+            containerColor = Color.Gray,
+        ),
+        modifier = Modifier
+            .fillMaxWidth()
+            .padding(10.dp)
+    )
+    {
+        Row(
+            Modifier.fillMaxWidth()
+        ) {
+            Column(
+                modifier = Modifier
+                    .weight(2f)
+                    .padding(10.dp),
+                verticalArrangement = Arrangement.Center,
+                horizontalAlignment = Alignment.Start
+            ) {
+                Text(text = "Depart")
+                Row() {
+                    Text(text = originCode)
+                    Spacer(modifier = Modifier.size(10.dp))
+                    Text(text = originName)
+                }
+                Text(text = "Arrive")
+                Row() {
+                    Text(text = destinationCode)
+                    Spacer(modifier = Modifier.size(10.dp))
+                    Text(text = destinationName)
+                }
+            }
+            IconButton(onClick = onAddFavorite) {
+                Icon(
+                    imageVector = Icons.Default.Star,
+                    contentDescription = "Save to favorites"
+                )
+            }
+        }
     }
 }
