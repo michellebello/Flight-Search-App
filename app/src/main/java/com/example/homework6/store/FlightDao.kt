@@ -20,4 +20,8 @@ interface FlightDao {
     // add query to search by userInput
     @Query("SELECT * FROM airport WHERE iata_code LIKE :query OR name LIKE :query")
     fun searchFlights(query:String) : Flow<List<Airport>>
+
+    // all flights from specific airport
+    @Query("SELECT * FROM airport WHERE iata_code!= :airportCode ORDER BY iata_code ASC")
+    fun getFlightsFromAirport(airportCode : String): Flow<List<Airport>>
 }
