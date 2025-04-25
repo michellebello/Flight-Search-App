@@ -9,14 +9,20 @@ import androidx.lifecycle.viewmodel.viewModelFactory
 import com.example.homework6.FlightApplication
 import com.example.homework6.store.Airport
 import com.example.homework6.store.Favorite
+import com.example.homework6.store.FavoriteStorage
 import com.example.homework6.store.FlightDao
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.launch
 
 class FlightModel(private val flightDao: FlightDao) : ViewModel() {
+    init {
+        clearFavoritesOnLaunch()
+    }
+
     fun getFavorites() : Flow<List<Favorite>> = flightDao.getAllFavoriteFlights()
 
-    // add method to searchBy user input in screens.kt
+    fun getStoredFavorites() : Flow<List<FavoriteStorage>> = flightDao.getAllStoredFavorites()
+    // add method to search By user input in screens.kt
     fun searchFlightsByAirport(query: String): Flow<List<Airport>> {
         return flightDao.searchFlights("%${query}")
     }
@@ -33,6 +39,12 @@ class FlightModel(private val flightDao: FlightDao) : ViewModel() {
                 destinationCode = destinyCode
             )
             flightDao.insert(favorite)
+        }
+    }
+
+    private fun clearFavoritesOnLaunch(){
+        viewModelScope.launch {
+            flightDao.clearFavorites()
         }
     }
 

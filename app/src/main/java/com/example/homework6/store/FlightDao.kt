@@ -24,4 +24,15 @@ interface FlightDao {
     // all flights from specific airport
     @Query("SELECT * FROM airport WHERE iata_code!= :airportCode ORDER BY iata_code ASC")
     fun getFlightsFromAirport(airportCode : String): Flow<List<Airport>>
+
+    @Query("""
+        SELECT f.departure_code AS departureCode, origin.name as departureName, f.destination_code AS destinationCode, destiny.name AS destinationName
+        FROM favorite f
+        JOIN airport AS origin ON f.departure_code= origin.iata_code
+        JOIN airport AS destiny ON f.destination_code=destiny.iata_code
+    """)
+    fun getAllStoredFavorites(): Flow<List<FavoriteStorage>>
+
+    @Query("DELETE FROM favorite")
+    suspend fun clearFavorites()
 }

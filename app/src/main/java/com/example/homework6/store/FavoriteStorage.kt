@@ -1,8 +1,8 @@
 package com.example.homework6.store
 
 data class FavoriteStorage (
-    val originCode : String,
-    val originName: String,
-    val destinyCode: String,
-    val destinyName: String
+    val departureCode : String,
+    val departureName: String,
+    val destinationCode: String,
+    val destinationName: String
     )

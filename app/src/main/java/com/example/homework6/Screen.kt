@@ -14,7 +14,6 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
-import androidx.compose.material3.Button
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
@@ -41,14 +40,15 @@ import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
-import androidx.compose.ui.text.style.TextAlign
+import androidx.compose.ui.text.font.FontWeight
 
 val blue = Color(0XFF637ec7)
 val ivory = Color(0XFFf6f7f0)
+val gray = Color(0XFFb0b3b8)
 
 @Composable
 fun Screen(viewModel: FlightModel = viewModel(factory = FlightModel.factory)) {
-    val favorites by viewModel.getFavorites().collectAsState(emptyList())
+    val favorites by viewModel.getStoredFavorites().collectAsState(emptyList())
     var userInput by remember { mutableStateOf("") }
     val flights by viewModel.searchFlightsByAirport(userInput).collectAsState(initial= emptyList())
     var selectedAirport: Airport? by remember { mutableStateOf(null) }
@@ -69,7 +69,7 @@ fun Screen(viewModel: FlightModel = viewModel(factory = FlightModel.factory)) {
                     titleContentColor = ivory
                 ),
                 title = {
-                    Text("Flight Search")
+                    Text("Flight Search", modifier = Modifier.padding(10.dp))
                 }
             )
         }
@@ -93,17 +93,23 @@ fun Screen(viewModel: FlightModel = viewModel(factory = FlightModel.factory)) {
 
             when {
                 userInput.isBlank() -> {
-                    LazyColumn {
-                        items(favorites) { favorite ->
-                            FlightInfoCard(
-                                originCode = favorite.departureCode,
-                                originName = "hello",
-                                destinationCode = favorite.destinationCode,
-                                destinationName = "hello",
-                                onAddFavorite = {}
-                            )
+                    Column(
+                        Modifier.fillMaxWidth()
+                    ){
+                        Text("Favorite routes", modifier = Modifier.padding(10.dp), fontWeight = FontWeight.Bold)
+                        LazyColumn {
+                            items(favorites) { favorite ->
+                                FlightInfoCard(
+                                    originCode = favorite.departureCode,
+                                    originName = favorite.departureName,
+                                    destinationCode = favorite.destinationCode,
+                                    destinationName = favorite.destinationName,
+                                    onAddFavorite = {}
+                                )
+                            }
                         }
                     }
+
                 }
                 selectedAirport == null -> {
                     LazyColumn(
@@ -156,7 +162,7 @@ fun Screen(viewModel: FlightModel = viewModel(factory = FlightModel.factory)) {
 fun FlightInfoCard(originCode: String, originName: String, destinationCode: String, destinationName: String, onAddFavorite: () -> Unit) {
     Card(
         colors = CardDefaults.cardColors(
-            containerColor = Color.Gray,
+            containerColor = gray
         ),
         modifier = Modifier
             .fillMaxWidth()
@@ -173,15 +179,15 @@ fun FlightInfoCard(originCode: String, originName: String, destinationCode: Stri
                 verticalArrangement = Arrangement.Center,
                 horizontalAlignment = Alignment.Start
             ) {
-                Text(text = "Depart")
-                Row() {
-                    Text(text = originCode)
+                Text(text = "DEPART")
+                Row {
+                    Text(text = originCode, fontWeight = FontWeight.ExtraBold)
                     Spacer(modifier = Modifier.size(10.dp))
                     Text(text = originName)
                 }
-                Text(text = "Arrive")
-                Row() {
-                    Text(text = destinationCode)
+                Text(text = "ARRIVE")
+                Row {
+                    Text(text = destinationCode, fontWeight = FontWeight.ExtraBold)
                     Spacer(modifier = Modifier.size(10.dp))
                     Text(text = destinationName)
                 }
@@ -189,7 +195,8 @@ fun FlightInfoCard(originCode: String, originName: String, destinationCode: Stri
             IconButton(onClick = onAddFavorite) {
                 Icon(
                     imageVector = Icons.Default.Star,
-                    contentDescription = "Save to favorites"
+                    contentDescription = "Save to favorites",
+                    tint = blue
                 )
             }
         }
